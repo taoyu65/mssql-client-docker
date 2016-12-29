@@ -1,12 +1,11 @@
 FROM ubuntu:16.04
-
+ENV MSSQL_SERVER_HOST mssql
+ENV MSSQL_USERNAME SA
+ENV MSSQL_PASSWORD
+ENV MSSQL_PORT 1433
+ENV MSSQL_DATABASE_NAME testdb
 RUN apt-get update && apt-get install -y \
-libltdl7 \
-curl \
-wget \
-apt-transport-https
-
-RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-RUN curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/msprod.list
-RUN apt-get update
-RUN ACCEPT_EULA=Y apt-get install -y mssql-tools
+nodejs-legacy \
+npm
+RUN npm install -g sql-cli
+CMD mssql -u $MSSQL_USERNAME -p $MSSQL_PASSWORD -s $MSSQL_SERVER_HOST -o $MSSQL_PORT -q create database $MSSQL_DATABASE_NAME
